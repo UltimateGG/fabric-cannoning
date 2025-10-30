@@ -1,4 +1,4 @@
-package com.evofaction.mixin;
+package com.evofaction.fc.mixin;
 
 import net.minecraft.entity.TntEntity;
 import org.spongepowered.asm.mixin.Mixin;

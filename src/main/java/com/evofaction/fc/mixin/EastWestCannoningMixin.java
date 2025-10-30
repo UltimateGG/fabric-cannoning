@@ -1,6 +1,6 @@
-package com.evofaction.mixin;
+package com.evofaction.fc.mixin;
 
-import com.evofaction.FabricCannoning;
+import com.evofaction.fc.FabricCannoning;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

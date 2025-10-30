@@ -1,4 +1,4 @@
-package com.evofaction;
+package com.evofaction.fc;
 
 import net.fabricmc.api.ClientModInitializer;
 

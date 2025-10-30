@@ -15,10 +15,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.evofaction.FabricCannoning"
+			"com.evofaction.fc.FabricCannoning"
 		],
 		"client": [
-			"com.evofaction.FabricCannoningClient"
+			"com.evofaction.fc.FabricCannoningClient"
 		]
 	},
 	"mixins": ["cannoning.mixins.json"],

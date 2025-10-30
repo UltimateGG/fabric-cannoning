@@ -1,6 +1,6 @@
-package com.evofaction.mixin;
+package com.evofaction.fc.mixin;
 
-import com.evofaction.FabricCannoning;
+import com.evofaction.fc.FabricCannoning;
 import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

@@ -1,4 +1,4 @@
-package com.evofaction;
+package com.evofaction.fc;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
