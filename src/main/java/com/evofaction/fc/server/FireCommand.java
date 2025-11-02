@@ -14,7 +14,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPointer;
+import net.minecraft.util.math.BlockPointerImpl;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
 import java.util.UUID;

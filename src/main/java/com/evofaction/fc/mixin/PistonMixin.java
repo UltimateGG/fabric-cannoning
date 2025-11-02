@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PistonBlockEntity.class)
 public class PistonMixin {
-	@Inject(
-		method = "pushEntities(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;FLnet/minecraft/block/entity/PistonBlockEntity;)V",
-		at = @At("HEAD"),
-		cancellable = true
-	)
-	private static void onPullEntity(World world, BlockPos pos, float f, PistonBlockEntity blockEntity, CallbackInfo ci) {
-		if (!blockEntity.isExtending() && FabricCannoning.DISABLE_PISTON_ENTITY_PULLBACK)
-			ci.cancel();
-	}
+    @Inject(
+        method = "pushEntities(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;FLnet/minecraft/block/entity/PistonBlockEntity;)V",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private static void onPullEntity(World world, BlockPos pos, float f, PistonBlockEntity blockEntity, CallbackInfo ci) {
+        if (!blockEntity.isExtending() && FabricCannoning.DISABLE_PISTON_ENTITY_PULLBACK)
+            ci.cancel();
+    }
 }
