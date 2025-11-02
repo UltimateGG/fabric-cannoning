@@ -1,13 +1,18 @@
 package com.evofaction.fc.mixin;
 
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.TntEntity;
+import net.minecraft.particle.ParticleTypes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 
 @Mixin(TntEntity.class)
-public class FixCannonsMixin {
+public abstract class FixCannonsMixin {
+    // Removes the X/Y randomness when TNT is spawned (lit, dispensed)
     @Redirect(
         method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/entity/LivingEntity;)V",
         at = @At(
@@ -16,37 +21,44 @@ public class FixCannonsMixin {
         )
     )
     private void removeInitialXZRandomness(TntEntity instance, double x, double y, double z) {
-        instance.setVelocity(0.0F, 0.2F, 0.0F);
+        instance.setVelocity(0.0F, 0.20000000298023224D, 0.0F);
     }
 
-    @Redirect(
-        method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/entity/LivingEntity;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/entity/TntEntity;setFuse(I)V"
-        )
-    )
-    private void fixFuseTime(TntEntity instance, int original) {
-        // 1.8 actually would explode when tick was -1 because of a post-decrement check
-        // so this counters the new "fixed" behavior.
-        instance.setFuse(81);
-    }
+    @Shadow
+    protected abstract void explode();
 
-    @Redirect(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/entity/TntEntity;updateWaterState()Z"
-        )
-    )
-    private boolean cancelUpdateWaterState(TntEntity instance) {
-//		if (FactionsCore.TNT_MOVES_IN_WATER)
-//			return instance.updateWaterState();
-        return false;
+    /**
+     * @author UltimateGamer079
+     * @reason Need full control to make TNT consistent with 1.8.
+     *         The main thing is these large double numbers for precision.
+     *         They are tiny, but add up and mess up precise cannons.
+     */
+    @Overwrite
+    public void tick() {
+        TntEntity self = (TntEntity) (Object)this;
+        if (!self.hasNoGravity()) {
+            self.setVelocity(self.getVelocity().add(0.0, -0.03999999910593033D, 0.0));
+        }
+
+        self.move(MovementType.SELF, self.getVelocity());
+        self.setVelocity(self.getVelocity().multiply(0.9800000190734863D));
+        if (self.isOnGround()) {
+            self.setVelocity(self.getVelocity().multiply(0.699999988079071D, -0.5, 0.699999988079071D));
+        }
+
+        int i = self.getFuse() - 1;
+        self.setFuse(i);
+        if (i <= -1) { // Tnt in 1.8 actually exploded on -1 (source code was 0)
+            self.discard();
+            if (!self.getWorld().isClient) {
+                this.explode();
+            }
+        } else {
+            // Disable TNT being pushed by water
+            // self.updateWaterState();
+            if (self.getWorld().isClient) {
+                self.getWorld().addParticle(ParticleTypes.SMOKE, self.getX(), self.getY() + 0.5, self.getZ(), 0.0, 0.0, 0.0);
+            }
+        }
     }
-//
-//	@Inject(method = "getEyeHeight", at = @At("HEAD"), cancellable = true)
-//	private void onGetEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-//		cir.setReturnValue(0.0f); // override the return value
-//	}
 }

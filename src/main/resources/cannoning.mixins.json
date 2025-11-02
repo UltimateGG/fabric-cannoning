@@ -6,6 +6,7 @@
     "FixCannonsMixin",
     "EastWestCannoningMixin",
     "PistonMixin",
+    "ExplosionMixin",
     "TestMixin"
   ],
   "injectors": {

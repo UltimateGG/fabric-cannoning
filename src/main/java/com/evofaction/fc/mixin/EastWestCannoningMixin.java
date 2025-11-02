@@ -54,7 +54,7 @@ public class EastWestCannoningMixin {
 
         // noinspection SimplifiableConditionalExpression
         boolean calculateZFirst = FabricCannoning.EAST_WEST_CANNONING_FIX
-            ? Math.abs(x) > Math.abs(z) // Flipped condition so the == edge case lines up (If equal, use YXZ)
+            ? Math.abs(x) > Math.abs(z) // Flipped condition (relative to Mojangs) so the == edge case lines up (If equal, use YXZ)
             : false; // 1.8 behavior (never change YXZ order)
 
         if (calculateZFirst && z != 0.0) {
