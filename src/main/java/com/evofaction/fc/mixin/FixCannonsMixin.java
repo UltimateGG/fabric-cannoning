@@ -3,9 +3,9 @@ package com.evofaction.fc.mixin;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -24,8 +24,17 @@ public abstract class FixCannonsMixin {
         instance.setVelocity(0.0F, 0.20000000298023224D, 0.0F);
     }
 
-    @Shadow
-    protected abstract void explode();
+    /**
+     * @author UltimateGamer079
+     * @reason Explosion is spawned in middle of TNT in 1.8, not at the entity's exact position.
+     */
+    @Overwrite
+    private void explode() {
+        TntEntity self = (TntEntity) (Object)this;
+        float f = 4.0F;
+
+        self.getWorld().createExplosion(self, self.getX(), self.getY() + (double) (self.getHeight() / 2.0F), self.getZ(), f, World.ExplosionSourceType.TNT);
+    }
 
     /**
      * @author UltimateGamer079
