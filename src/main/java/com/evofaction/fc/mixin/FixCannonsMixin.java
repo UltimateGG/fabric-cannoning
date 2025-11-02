@@ -1,8 +1,8 @@
 package com.evofaction.fc.mixin;
 
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.*;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -11,7 +11,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 
 @Mixin(TntEntity.class)
-public abstract class FixCannonsMixin {
+public abstract class FixCannonsMixin extends Entity {
+    protected FixCannonsMixin(EntityType<?> type, World world) {
+        super(type, world);
+    }
+
     // Removes the X/Y randomness when TNT is spawned (lit, dispensed)
     @Redirect(
         method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/entity/LivingEntity;)V",
@@ -69,5 +73,26 @@ public abstract class FixCannonsMixin {
                 self.getWorld().addParticle(ParticleTypes.SMOKE, self.getX(), self.getY() + 0.5, self.getZ(), 0.0, 0.0, 0.0);
             }
         }
+    }
+
+    /**
+     * Copied from Paper Spigot's fix cannnons. TNT is measured from middle.
+     * This affects exposure.
+     */
+    @Override
+    public double squaredDistanceTo(Vec3d vector) {
+        double d = this.getX() - vector.x;
+        double e = this.getY() + this.getStandingEyeHeight() - vector.y;
+        double f = this.getZ() - vector.z;
+        return d * d + e * e + f * f;
+    }
+
+    /**
+     * @author UltimateGamer079
+     * @reason Copied from Paper Spigot's fix cannnons. TNT is measured from middle.
+     */
+    @Overwrite
+    public float getEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return dimensions.height / 2;
     }
 }
