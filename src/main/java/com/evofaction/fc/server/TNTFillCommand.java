@@ -42,14 +42,12 @@ public class TNTFillCommand {
 
     private static int fillDispensers(ServerCommandSource source, int radius) throws CommandSyntaxException {
         ServerPlayerEntity player = source.getPlayerOrThrow();
-
-        assert player != null;
         World world = player.getWorld();
         Vec3d pos = player.getPos();
+
+        player.sendMessage(Text.literal("Filling dispensers within " + radius + " blocks..."));
+
         int filled = 0;
-
-        source.sendFeedback(() -> Text.literal("Filling dispensers within " + radius + " blocks..."), false);
-
         final ItemStack tnt = new ItemStack(Items.TNT, 64);
 
         // Iterate through nearby blocks
@@ -60,23 +58,22 @@ public class TNTFillCommand {
                     mutable.set(pos.x + x, pos.y + y, pos.z + z);
                     Block block = world.getBlockState(mutable).getBlock();
 
-                    if (block == Blocks.DISPENSER) {
-                        BlockEntity be = world.getBlockEntity(mutable);
-                        if (be instanceof DispenserBlockEntity dispenser) {
-                            dispenser.clear();
-                            for (int i = 0; i < dispenser.size(); i++) {
-                                dispenser.setStack(i, tnt.copy());
-                            }
-                            filled++;
+                    if (block != Blocks.DISPENSER) continue;
+
+                    BlockEntity be = world.getBlockEntity(mutable);
+                    if (be instanceof DispenserBlockEntity dispenser) {
+                        dispenser.clear();
+                        for (int i = 0; i < dispenser.size(); i++) {
+                            dispenser.setStack(i, tnt.copy());
                         }
+                        filled++;
                     }
                 }
             }
         }
 
         int finalFilled = filled;
-        source.sendFeedback(() ->
-            Text.literal("§aSuccessfully filled §7" + finalFilled + " §adispensers within §7" + radius + " §ablocks!"), false);
+        player.sendMessage(Text.literal("§aSuccessfully filled §7" + finalFilled + " §adispensers within §7" + radius + " §ablocks!"));
         return filled;
     }
 }
