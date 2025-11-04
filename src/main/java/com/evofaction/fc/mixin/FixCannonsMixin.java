@@ -30,7 +30,8 @@ public abstract class FixCannonsMixin extends Entity {
 
     /**
      * @author UltimateGamer079
-     * @reason Explosion is spawned in middle of TNT in 1.8, not at the entity's exact position.
+     * @reason Explosion is spawned in middle of TNT in Paper 1.8, not at the entity's exact position.
+     *         In the vanilla game its actually height/16 but Bukkit changed it for some reason, WAY back.
      */
     @Overwrite
     private void explode() {

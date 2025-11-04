@@ -84,7 +84,7 @@ public class ExplosionMixin {
         Set<BlockPos> set = Sets.<BlockPos>newHashSet();
         int i = 16;
 
-        // Collecting blocks to affect for explosions, and potentially spawnign fire
+        // Collecting blocks to affect for explosions, and potentially spawning fire
         for (int j = 0; j < 16; j++) {
             for (int k = 0; k < 16; k++) {
                 for (int l = 0; l < 16; l++) {
