@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 
 @Mixin(TntEntity.class)
-public abstract class FixCannonsMixin extends Entity {
-    protected FixCannonsMixin(EntityType<?> type, World world) {
+public abstract class TNTMixin extends Entity {
+    protected TNTMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
@@ -31,7 +31,7 @@ public abstract class FixCannonsMixin extends Entity {
     /**
      * @author UltimateGamer079
      * @reason Explosion is spawned in middle of TNT in Paper 1.8, not at the entity's exact position.
-     *         In the vanilla game its actually height/16 but Bukkit changed it for some reason, WAY back.
+     *         In the vanilla game its actually height/16 (1/16th above entity feet).
      */
     @Overwrite
     private void explode() {

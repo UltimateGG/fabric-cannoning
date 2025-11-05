@@ -3,10 +3,11 @@
   "package": "com.evofaction.fc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "FixCannonsMixin",
     "EastWestCannoningMixin",
-    "PistonMixin",
     "ExplosionMixin",
+    "TNTMixin",
+    "FallingBlockMixin",
+    "PistonMixin",
     "TestMixin"
   ],
   "injectors": {
