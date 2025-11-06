@@ -5,10 +5,11 @@
   "mixins": [
     "EastWestCannoningMixin",
     "ExplosionMixin",
-    "TNTMixin",
     "FallingBlockMixin",
     "PistonMixin",
-    "TestMixin"
+    "PistonMovementMixin",
+    "TestMixin",
+    "TNTMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -31,5 +31,15 @@ public class ServerStartup implements DedicatedServerModInitializer {
                     return 0;
                 })
         );
+        dispatcher.register(
+            CommandManager.literal("pb")
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(ctx -> {
+                    FabricCannoning.PISTON_PULLBACK_FIX = !FabricCannoning.PISTON_PULLBACK_FIX;
+                    ctx.getSource().sendMessage(Text.literal("Piston Patch is now: " + FabricCannoning.PISTON_PULLBACK_FIX));
+
+                    return 0;
+                })
+        );
     }
 }
