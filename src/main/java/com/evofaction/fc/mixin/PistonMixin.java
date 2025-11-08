@@ -1,20 +1,24 @@
 package com.evofaction.fc.mixin;
 
-import com.evofaction.fc.FabricCannoning;
+import com.evofaction.fc.Config;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
 import java.util.List;
@@ -22,8 +26,6 @@ import java.util.List;
 
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonMixin extends BlockEntity {
-    private static final int field_31382 = 2;
-    private static final double field_31383 = 0.01;
     @Shadow
     private BlockState pushedBlock;
     @Shadow
@@ -32,13 +34,11 @@ public abstract class PistonMixin extends BlockEntity {
     private boolean extending;
     @Shadow
     private boolean source;
-    private static final ThreadLocal<Direction> entityMovementDirection = ThreadLocal.withInitial(() -> null);
+    @Final
+    @Shadow
+    private static ThreadLocal<Direction> entityMovementDirection;
     @Shadow
     private float progress;
-
-    private float lastProgress;
-    private long savedWorldTime;
-    private int field_26705;
 
     protected PistonMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -102,7 +102,7 @@ public abstract class PistonMixin extends BlockEntity {
                     for (Box collidingBlockPart : list2) {
                         Box stretchedPath = Boxes.stretch(offsetHeadBox(pos, collidingBlockPart, blockEntity), direction, d);
                         Box targetEntityBoundingBox = entity.getBoundingBox();
-                        if (FabricCannoning.PISTON_PULLBACK_FIX && !self.extending) {
+                        if (Config.PISTON_PULLBACK_FIX && !self.extending) {
                             var origPart = collidingBlockPart.offset(
                                 pos.getX() + self.facing.getOffsetX(), pos.getY() + self.facing.getOffsetY(), pos.getZ() + self.facing.getOffsetZ()
                             );
@@ -136,29 +136,47 @@ public abstract class PistonMixin extends BlockEntity {
     private BlockState getHeadBlockState() {
         return null;
     }
-    @Shadow
-    private static void moveEntity(Direction direction, Entity entity, double distance, Direction movementDirection) {}
+
+    /**
+     * @author UltimateGamer079
+     * @reason 1.8 pistons pushed farther than one block which would align TNT.
+     *         This is not the exact same but will be enough to be non-symmetrical.
+     */
+    @Overwrite
+    private static void moveEntity(Direction direction, Entity entity, double distance, Direction movementDirection) {
+        if (entity instanceof TntEntity || entity instanceof FallingBlockEntity)
+            distance += 0.05D;
+
+        entityMovementDirection.set(direction);
+        entity.move(
+            MovementType.PISTON,
+            new Vec3d(distance * movementDirection.getOffsetX(), distance * movementDirection.getOffsetY(), distance * movementDirection.getOffsetZ())
+        );
+        entityMovementDirection.set(null);
+    }
     @Shadow
     private static double getIntersectionSize(Box box, Direction direction, Box box2) {
         return 0;
     }
     @Shadow
-    private static void push(BlockPos pos, Entity entity, Direction direction, double amount) {
-    }
-
-
-//    @ModifyVariable(
-//        method= "pushEntities(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;FLnet/minecraft/block/entity/PistonBlockEntity;)V",
-//        at = @At("STORE"),
-//        ordinal = 0
-//    )
-//    private static double pistonTestFix(double distance) {
-//        return distance + 0.0625F;
-//    }
+    private static void push(BlockPos pos, Entity entity, Direction direction, double amount) {}
 }
 
 @Mixin(Entity.class)
 class PistonMovementMixin {
+    @Shadow
+    protected Vec3d movementMultiplier;
+
+    // One push webs
+    @Inject(
+        method = "move",
+        at = @At("HEAD")
+    )
+    private void onMove(MovementType movementType, Vec3d movement, CallbackInfo ci) {
+        if (movementType == MovementType.PISTON) {
+            this.movementMultiplier = Vec3d.ZERO;
+        }
+    }
 //    @ModifyConstant(
 //        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
 //        constant = @Constant(doubleValue = 0.51)

@@ -30,6 +30,8 @@ public class FireCommand {
         CommandRegistrationCallback.EVENT.register(FireCommand::registerCommand);
 
         UseBlockCallback.EVENT.register((player, world, hand, blockHitResult) -> {
+            if (world.isClient) return ActionResult.PASS;
+
             if (world.getBlockState(blockHitResult.getBlockPos()).getBlock() instanceof ButtonBlock) {
                 LOCATIONS.put(player.getUuid(), new BlockPointerImpl((ServerWorld) world, blockHitResult.getBlockPos()));
             }

@@ -17,9 +17,6 @@
 		"main": [
 			"com.evofaction.fc.FabricCannoning"
 		],
-		"server": [
-			"com.evofaction.fc.server.ServerStartup"
-		],
 		"client": [
 			"com.evofaction.fc.ClientStartup"
 		]

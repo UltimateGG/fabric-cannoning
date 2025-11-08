@@ -1,6 +1,6 @@
 package com.evofaction.fc.mixin;
 
-import com.evofaction.fc.FabricCannoning;
+import com.evofaction.fc.Config;
 import net.minecraft.entity.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
@@ -69,7 +69,7 @@ public abstract class TNTMixin extends Entity {
                 this.explode();
             }
         } else {
-            if (FabricCannoning.LIQUIDS_MOVE_TNT) this.updateWaterState(); // Disable TNT being pushed by water
+            if (Config.LIQUIDS_MOVE_TNT) this.updateWaterState(); // Disable TNT being pushed by water
             if (self.getWorld().isClient) {
                 self.getWorld().addParticle(ParticleTypes.SMOKE, self.getX(), self.getY() + 0.5, self.getZ(), 0.0, 0.0, 0.0);
             }

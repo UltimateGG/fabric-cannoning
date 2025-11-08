@@ -1,6 +1,15 @@
 package com.evofaction.fc;
 
+import com.evofaction.fc.server.FireCommand;
+import com.evofaction.fc.server.ProtectionBlock;
+import com.evofaction.fc.server.TNTFillCommand;
+import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,27 +19,37 @@ public class FabricCannoning implements ModInitializer {
     public static final String MOD_ID = "fabric-cannoning";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static boolean LIQUIDS_MOVE_TNT = false;
-    /**
-     * @value true = East/West velocity based triangles patch
-     * @value false = Vanilla 1.8 behavior, which will ALWAYS do YXZ triangles
-     */
-    public static boolean EAST_WEST_CANNONING_FIX = false;
-    /**
-     * If a piston is retracting and an entity is intersecting the collision box of
-     * the block (or piston head) that is retracting, don't pull it backwards.
-     *
-     * This fixes sand comps that push sand out of webs (It won't push and pull sand
-     * back and forth), as well as something like pushing TNT against a wall to align it.
-     * If this is false something like a piston aligner would push TNT against the wall,
-     * then pull it back on the retraction.
-     *
-     * It only affects things already glitched inside of the block being pulled back.
-     */
-    public static boolean PISTON_PULLBACK_FIX = true;
-
     @Override
     public void onInitialize() {
+        TNTFillCommand.register();
+        FireCommand.register();
+        CommandRegistrationCallback.EVENT.register(this::registerCommand);
 
+        ProtectionBlock.init();
+
+        FabricCannoning.LOGGER.info("Fabric cannoning loaded");
+    }
+
+    private void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment env) {
+        dispatcher.register(
+            CommandManager.literal("ewpatch")
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(ctx -> {
+                    Config.EAST_WEST_CANNONING_FIX = !Config.EAST_WEST_CANNONING_FIX;
+                    ctx.getSource().sendMessage(Text.literal("E/W Patch is now: " + Config.EAST_WEST_CANNONING_FIX));
+
+                    return 0;
+                })
+        );
+        dispatcher.register(
+            CommandManager.literal("pb")
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(ctx -> {
+                    Config.PISTON_PULLBACK_FIX = !Config.PISTON_PULLBACK_FIX;
+                    ctx.getSource().sendMessage(Text.literal("Piston Patch is now: " + Config.PISTON_PULLBACK_FIX));
+
+                    return 0;
+                })
+        );
     }
 }

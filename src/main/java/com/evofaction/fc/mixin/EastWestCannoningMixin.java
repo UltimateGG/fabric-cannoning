@@ -1,6 +1,6 @@
 package com.evofaction.fc.mixin;
 
-import com.evofaction.fc.FabricCannoning;
+import com.evofaction.fc.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -53,7 +53,7 @@ public class EastWestCannoningMixin {
         // SK spigot appears to do it this way.
 
         // noinspection SimplifiableConditionalExpression
-        boolean calculateZFirst = FabricCannoning.EAST_WEST_CANNONING_FIX
+        boolean calculateZFirst = Config.EAST_WEST_CANNONING_FIX
             ? Math.abs(x) > Math.abs(z) // Flipped condition (relative to Mojangs) so the == edge case lines up (If equal, use YXZ)
             : false; // 1.8 behavior (never change YXZ order)
 
