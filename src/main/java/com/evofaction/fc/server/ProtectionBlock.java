@@ -64,7 +64,8 @@ public class ProtectionBlock {
 
         @Override
         public int hashCode() {
-            int result = x;
+            int result = world.hashCode();
+            result = 31 * result + x;
             result = 31 * result + z;
             return result;
         }

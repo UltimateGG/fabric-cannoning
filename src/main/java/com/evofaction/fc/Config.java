@@ -30,4 +30,10 @@ public class Config {
      * will not be blown up by explosions. For cannon testing only.
      */
     public static boolean PROTECTION_BLOCK_ENABLED = true;
+
+    /**
+     * Optimization: Caches entity exposure to explosions on a per-tick level.
+     * This is the equivalent of paper spigot's old optimize-explosions flag.
+     */
+    public static boolean CACHE_EXPLOSION_EXPOSURE = true;
 }

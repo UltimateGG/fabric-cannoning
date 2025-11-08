@@ -1,5 +1,6 @@
 package com.evofaction.fc;
 
+import com.evofaction.fc.server.ExposureCache;
 import com.evofaction.fc.server.FireCommand;
 import com.evofaction.fc.server.ProtectionBlock;
 import com.evofaction.fc.server.TNTFillCommand;
@@ -26,6 +27,7 @@ public class FabricCannoning implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(this::registerCommand);
 
         ProtectionBlock.init();
+        ExposureCache.init();
 
         FabricCannoning.LOGGER.info("Fabric cannoning loaded");
     }

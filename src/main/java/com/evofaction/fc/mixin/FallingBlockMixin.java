@@ -165,4 +165,14 @@ public abstract class FallingBlockMixin extends Entity {
     public float getEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return dimensions.height / 2;
     }
+
+    /**
+     * Optimization: Falling blocks can never sneak. The name descending is misleading,
+     * it only calls isSneaking. It only affects players.
+     * This method causes a lot of unnecessary checks. It waits on a ReentrantLock.
+     */
+    @Override
+    public boolean isDescending() {
+        return false;
+    }
 }

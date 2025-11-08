@@ -1,6 +1,7 @@
 package com.evofaction.fc.mixin;
 
 import com.evofaction.fc.Config;
+import com.evofaction.fc.server.ExposureCache;
 import com.evofaction.fc.server.ProtectionBlock;
 import com.google.common.collect.Sets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -99,6 +100,19 @@ public class ExplosionMixin {
         }
     }
 
+    @Unique
+    private static float cachedGetExposure(Vec3d source, Entity entity) {
+        if (!Config.CACHE_EXPLOSION_EXPOSURE) return getExposure(source, entity);
+
+        ExposureCache.CacheKey key = new ExposureCache.CacheKey(entity.getWorld(), source, entity.getBoundingBox());
+        Float cachedValue = ExposureCache.getCachedExposure(key);
+        if (cachedValue != null) return cachedValue;
+
+        float value = getExposure(source, entity);
+        ExposureCache.cacheExposure(key, value);
+        return value;
+    }
+
     @Shadow @Final
     private DamageSource damageSource;
 
@@ -194,7 +208,7 @@ public class ExplosionMixin {
                         x /= aa;
                         y /= aa;
                         z /= aa;
-                        double ab = getExposure(vec3d, entity);
+                        double ab = cachedGetExposure(vec3d, entity);
                         double ac = (1.0 - w) * ab;
                         entity.damage(this.damageSource, (int)((ac * ac + ac) / 2.0 * 7.0 * q + 1.0));
                         double ad;
