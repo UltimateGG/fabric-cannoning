@@ -26,6 +26,9 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
     @Unique
     public int mergedTNT = 1;
 
+    @Unique
+    public boolean isClone = false;
+
     protected TNTMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -49,10 +52,9 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
      */
     @Overwrite
     private void explode() {
-        TntEntity self = (TntEntity) (Object)this;
         float f = 4.0F;
 
-        self.getWorld().createExplosion(self, self.getX(), self.getY() + (double) (self.getHeight() / 2.0F), self.getZ(), f, World.ExplosionSourceType.TNT);
+        this.getWorld().createExplosion(this, this.getX(), this.getY() + (double) (this.getHeight() / 2.0F), this.getZ(), f, World.ExplosionSourceType.TNT);
     }
 
     /**
@@ -81,6 +83,7 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
     private void unmerge() {
         if (this.mergedTNT > 1 && this.getFuse() - 1 <= -1) {
             TntEntity clone = new TntEntity(this.getWorld(), this.getX(), this.getY(), this.getZ(), this.causingEntity);
+            ((TNTInterface) clone)._$markClone();
             int fuse = this.getFuse();
 
             for (int i = 0; i < this.mergedTNT - 1; i++) {
@@ -94,8 +97,6 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
                 // and explode. The explosion will affect `this` which we will
                 // then use next loop iteration as the clone's new position/velocity.
                 clone.tick();
-
-                ((TNTInterface) clone)._$resurrect();
             }
 
             clone.discard();
@@ -124,7 +125,7 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
         int i = this.getFuse() - 1;
         this.setFuse(i);
         if (i <= -1) { // Tnt in 1.8 actually exploded on -1 (source code was 0)
-            this.discard();
+            if (!this.isClone) this.discard();
             if (!this.getWorld().isClient) {
                 this.explode();
             }
@@ -173,8 +174,8 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
     }
 
     @Override
-    public void _$resurrect() {
-        this.unsetRemoved();
+    public void _$markClone() {
+        this.isClone = true;
     }
 
     @Override

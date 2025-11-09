@@ -8,7 +8,7 @@ public interface TNTInterface {
 
     void _$addMergedTNT(TNTInterface intf);
 
-    void _$resurrect();
+    void _$markClone();
 
     boolean _$canMergeWith(TntEntity ent);
 }

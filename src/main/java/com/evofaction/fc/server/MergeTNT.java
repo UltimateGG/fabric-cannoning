@@ -14,6 +14,7 @@ public class MergeTNT {
         ServerTickEvents.START_WORLD_TICK.register((world) -> {
             if (!Config.MERGE_TNT) return;
 
+            prev[0] = null;
             world.entityList.forEach(MergeTNT::tryMerge);
         });
     }

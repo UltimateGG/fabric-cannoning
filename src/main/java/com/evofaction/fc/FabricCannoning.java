@@ -52,6 +52,16 @@ public class FabricCannoning implements ModInitializer {
                 })
         );
         dispatcher.register(
+            CommandManager.literal("exposurecache")
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(ctx -> {
+                    Config.CACHE_EXPLOSION_EXPOSURE = !Config.CACHE_EXPLOSION_EXPOSURE;
+                    ctx.getSource().sendMessage(Text.literal("Exposure cache is now: " + Config.CACHE_EXPLOSION_EXPOSURE));
+
+                    return 0;
+                })
+        );
+        dispatcher.register(
             CommandManager.literal("pb")
                 .requires(source -> source.hasPermissionLevel(4))
                 .executes(ctx -> {
