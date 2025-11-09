@@ -1,9 +1,6 @@
 package com.evofaction.fc;
 
-import com.evofaction.fc.server.ExposureCache;
-import com.evofaction.fc.server.FireCommand;
-import com.evofaction.fc.server.ProtectionBlock;
-import com.evofaction.fc.server.TNTFillCommand;
+import com.evofaction.fc.server.*;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -28,6 +25,7 @@ public class FabricCannoning implements ModInitializer {
 
         ProtectionBlock.init();
         ExposureCache.init();
+        MergeTNT.init();
 
         FabricCannoning.LOGGER.info("Fabric cannoning loaded");
     }
@@ -39,6 +37,16 @@ public class FabricCannoning implements ModInitializer {
                 .executes(ctx -> {
                     Config.EAST_WEST_CANNONING_FIX = !Config.EAST_WEST_CANNONING_FIX;
                     ctx.getSource().sendMessage(Text.literal("E/W Patch is now: " + Config.EAST_WEST_CANNONING_FIX));
+
+                    return 0;
+                })
+        );
+        dispatcher.register(
+            CommandManager.literal("mergedtnt")
+                .requires(source -> source.hasPermissionLevel(4))
+                .executes(ctx -> {
+                    Config.MERGE_TNT = !Config.MERGE_TNT;
+                    ctx.getSource().sendMessage(Text.literal("Merge TNT is now: " + Config.MERGE_TNT));
 
                     return 0;
                 })

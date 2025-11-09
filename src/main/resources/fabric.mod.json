@@ -12,6 +12,7 @@
 		"sources": "https://github.com/UltimateGG"
 	},
 	"license": "GPL-3.0",
+	"accessWidener": "cannoning.accesswidener",
 	"environment": "*",
 	"entrypoints": {
 		"main": [

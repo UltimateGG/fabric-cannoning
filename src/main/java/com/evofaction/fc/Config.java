@@ -32,6 +32,13 @@ public class Config {
     public static boolean PROTECTION_BLOCK_ENABLED = true;
 
     /**
+     * Significant Optimization: If TNT is in the same exact position, same fuse, and same velocity
+     * as another, it is "merged" and only one entity is kept. At fuse 0, the
+     * number of merged TNT explosions are created.
+     */
+    public static boolean MERGE_TNT = true;
+
+    /**
      * Optimization: Caches entity exposure to explosions on a per-tick level.
      * This is the equivalent of paper spigot's old optimize-explosions flag.
      */

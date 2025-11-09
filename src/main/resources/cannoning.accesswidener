@@ -1,0 +1,3 @@
+accessWidener v2 named
+# Merged TNT needs access to tickable entity list
+accessible field net/minecraft/server/world/ServerWorld entityList Lnet/minecraft/world/EntityList;
