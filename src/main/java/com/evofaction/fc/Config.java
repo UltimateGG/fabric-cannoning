@@ -1,6 +1,10 @@
 package com.evofaction.fc;
 
 public class Config {
+    //
+    // General Cannon Settings
+    //
+
     /**
      * Controls if TNT moves in water/lava
      */
@@ -30,6 +34,10 @@ public class Config {
      * will not be blown up by explosions. For cannon testing only.
      */
     public static boolean PROTECTION_BLOCK_ENABLED = true;
+
+    //
+    // Optimizations
+    //
 
     /**
      * Significant Optimization: If TNT is in the same exact position, same fuse, and same velocity
