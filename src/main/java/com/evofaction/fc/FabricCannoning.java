@@ -23,7 +23,6 @@ public class FabricCannoning implements ModInitializer {
         FireCommand.register();
         CommandRegistrationCallback.EVENT.register(this::registerCommand);
 
-        ProtectionBlock.init();
         ExposureCache.init();
         MergeTNT.init();
 

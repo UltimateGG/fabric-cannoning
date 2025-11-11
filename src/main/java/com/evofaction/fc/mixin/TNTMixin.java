@@ -186,9 +186,9 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
     @Override
     public boolean _$canMergeWith(TntEntity t) {
         return (
-            this.getFuse() == t.getFuse() &&
             this.getPos().equals(t.getPos()) &&
             this.getVelocity().equals(t.getVelocity()) &&
+            this.getFuse() == t.getFuse() &&
             this.getBoundingBox().equals(t.getBoundingBox())
         );
     }

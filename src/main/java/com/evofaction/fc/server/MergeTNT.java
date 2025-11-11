@@ -24,7 +24,7 @@ public class MergeTNT {
 
         // Last consecutive TNT entity in tick loop wins the merge
         if (prev[0] != null && ((TNTInterface) prev[0])._$canMergeWith(tntEntity)) {
-            ((TNTInterface) entity)._$addMergedTNT(((TNTInterface) prev[0]));
+            ((TNTInterface) entity)._$addMergedTNT((TNTInterface) prev[0]);
             prev[0].discard();
         }
 
