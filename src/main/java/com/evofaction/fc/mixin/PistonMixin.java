@@ -132,6 +132,7 @@ public abstract class PistonMixin extends BlockEntity {
     private static Box offsetHeadBox(BlockPos pos, Box boundingBox, PistonBlockEntity blockEntity) {
         return  null;
     }
+
     @Shadow
     private BlockState getHeadBlockState() {
         return null;
@@ -161,22 +162,9 @@ public abstract class PistonMixin extends BlockEntity {
     @Shadow
     private static void push(BlockPos pos, Entity entity, Direction direction, double amount) {}
 }
-
-@Mixin(Entity.class)
-class PistonMovementMixin {
-    @Shadow
-    protected Vec3d movementMultiplier;
-
-    // One push webs
-    @Inject(
-        method = "move",
-        at = @At("HEAD")
-    )
-    private void onMove(MovementType movementType, Vec3d movement, CallbackInfo ci) {
-        if (movementType == MovementType.PISTON) {
-            this.movementMultiplier = Vec3d.ZERO;
-        }
-    }
+//
+//@Mixin(Entity.class)
+//class PistonMovementMixin {
 //    @ModifyConstant(
 //        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
 //        constant = @Constant(doubleValue = 0.51)
@@ -192,4 +180,4 @@ class PistonMovementMixin {
 //    private double modifyClamp2(double original) {
 //        return -1;
 //    }
-}
+//}

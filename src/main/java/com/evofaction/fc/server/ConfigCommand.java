@@ -28,9 +28,17 @@ public class ConfigCommand {
                         Config.CACHE_EXPLOSION_EXPOSURE = !Config.CACHE_EXPLOSION_EXPOSURE;
                         return sendToggleMsg(ctx, "Exposure cache", Config.CACHE_EXPLOSION_EXPOSURE, false);
                     }))
-                    .then(CommandManager.literal("pistonfix").executes(ctx -> {
+                    .then(CommandManager.literal("pistonpullback").executes(ctx -> {
                         Config.PISTON_PULLBACK_FIX = !Config.PISTON_PULLBACK_FIX;
-                        return sendToggleMsg(ctx, "Piston fix", Config.PISTON_PULLBACK_FIX, false);
+                        return sendToggleMsg(ctx, "Piston pullback fix", Config.PISTON_PULLBACK_FIX, false);
+                    }))
+                    .then(CommandManager.literal("block36fix").executes(ctx -> {
+                        Config.BLOCK36_RESOLVES_COLLISION = !Config.BLOCK36_RESOLVES_COLLISION;
+                        return sendToggleMsg(ctx, "Block 36 exposure fix", !Config.BLOCK36_RESOLVES_COLLISION, false);
+                    }))
+                    .then(CommandManager.literal("1pushwebs").executes(ctx -> {
+                        Config.ONE_PUSH_WEBS = !Config.ONE_PUSH_WEBS;
+                        return sendToggleMsg(ctx, "One push webs", Config.ONE_PUSH_WEBS, true);
                     }))
                     .then(CommandManager.literal("protectionblocks").executes(ctx -> {
                         Config.PROTECTION_BLOCK_ENABLED = !Config.PROTECTION_BLOCK_ENABLED;

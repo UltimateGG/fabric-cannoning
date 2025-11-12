@@ -2,19 +2,12 @@ package com.evofaction.fc;
 
 public class Config {
     //
-    // General Cannon Settings
+    // Essential Cannon Fixes
     //
-
     /**
      * Controls if TNT moves in water/lava
      */
     public static boolean LIQUIDS_MOVE_TNT = false;
-
-    /**
-     * @value true = East/West velocity based triangles patch
-     * @value false = Vanilla 1.8 behavior, which will ALWAYS do YXZ triangles
-     */
-    public static boolean EAST_WEST_CANNONING_FIX = false;
 
     /**
      * If a piston is retracting and an entity is intersecting the collision box of
@@ -30,6 +23,30 @@ public class Config {
     public static boolean PISTON_PULLBACK_FIX = true;
 
     /**
+     * When false, makes moving piston blocks (Block 36) not block ray traces for collision.
+     * This fixes carpet comps. Fence gate comps still work on default 1.20 since
+     * they already have no collision (when open). This does not affect player/entity
+     * movement collision.
+     */
+    public static boolean BLOCK36_RESOLVES_COLLISION = false;
+
+    //
+    // General/Optional Cannon Settings
+    //
+    /**
+     * @value true = East/West velocity based triangles patch
+     * @value false = Vanilla 1.8 behavior, which will ALWAYS do YXZ triangles
+     */
+    public static boolean EAST_WEST_CANNONING_FIX = false;
+
+    /**
+     * In newer versions like 1.21.10, pistons can one-push entities out of cobwebs.
+     * This enables that behavior, so sand will be pushed out in one go.
+     * In 1.8 it took multiple pulses.
+     */
+    public static boolean ONE_PUSH_WEBS = false;
+
+    /**
      * If enabled, any blocks above or below a protection block
      * will not be blown up by explosions. For cannon testing only.
      */
@@ -38,16 +55,15 @@ public class Config {
     //
     // Optimizations
     //
-
     /**
-     * Significant Optimization: If TNT is in the same exact position, same fuse, and same velocity
+     * When true, if TNT is in the same exact position, same fuse, and same velocity
      * as another, it is "merged" and only one entity is kept. At fuse 0, the
      * number of merged TNT explosions are created.
      */
     public static boolean MERGE_TNT = true;
 
     /**
-     * Optimization: Caches entity exposure to explosions on a per-tick level.
+     * Caches entity exposure to explosions on a per-tick level.
      * This is the equivalent of paper spigot's old optimize-explosions flag.
      */
     public static boolean CACHE_EXPLOSION_EXPOSURE = true;

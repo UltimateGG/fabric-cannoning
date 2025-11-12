@@ -5,11 +5,12 @@
   "mixins": [
     "EastWestCannoningMixin",
     "ExplosionMixin",
+    "ExposureCacheMixin",
     "FallingBlockMixin",
     "LithiumExplosionMixin",
+    "OnePushWebsMixin",
     "PistonMixin",
-    "PistonMovementMixin",
-    "TestMixin",
+    "Block36ExposureMixin",
     "TNTMixin"
   ],
   "injectors": {
