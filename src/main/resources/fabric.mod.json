@@ -32,7 +32,8 @@
 	},
 	"custom": {
 		"lithium:options": {
-			"mixin.entity.collisions.movement": false
+			"mixin.entity.collisions.movement": false,
+			"mixin.world.explosions": false
 		}
 	}
 }

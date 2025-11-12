@@ -18,8 +18,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
-
-// Overwrites lithium's entity.collisions.movement. See fabric.mod.json
+// Need to override for east/west patch but Lithium was overwriting this same spot.
+// Disables lithium's entity.collisions.movement - See fabric.mod.json
+// https://github.com/CaffeineMC/lithium/blob/9d3d6bbcbc8703ef39f03ee44912b09604b4877b/src/main/java/me/jellysquid/mods/lithium/mixin/entity/collisions/movement/EntityMixin.java#L1
 @Mixin(Entity.class)
 public class EastWestCannoningMixin {
     @Redirect(
@@ -60,7 +61,6 @@ public class EastWestCannoningMixin {
      *  "probably" is a key word there. This is not foolproof, but it's how most servers did it.
      *  It WILL break some cannons (e.g. diags) which is why I prefer it off.
      */
-    // https://github.com/CaffeineMC/lithium/blob/1.20.1/src/main/java/me/jellysquid/mods/lithium/mixin/entity/collisions/movement/EntityMixin.java
     @Unique
     private static Vec3d lithiumCollideMultiAxisMovement(@Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, boolean getEntityCollisions, List<VoxelShape> otherCollisions) {
         //vanilla order: entities, worldborder, blocks. It is unknown whether changing this order changes the result regarding the confusing 1e-7 VoxelShape margin behavior. Not yet investigated
