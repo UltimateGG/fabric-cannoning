@@ -44,6 +44,10 @@ public class ConfigCommand {
                         Config.PROTECTION_BLOCK_ENABLED = !Config.PROTECTION_BLOCK_ENABLED;
                         return sendToggleMsg(ctx, "Protection blocks", Config.PROTECTION_BLOCK_ENABLED, true);
                     }))
+                    .then(CommandManager.literal("wpredstone").executes(ctx -> {
+                        Config.WATER_PROTECTED_REDSTONE = !Config.WATER_PROTECTED_REDSTONE;
+                        return sendToggleMsg(ctx, "Water protected redstone", Config.WATER_PROTECTED_REDSTONE, false);
+                    }))
             );
         });
     }

@@ -52,6 +52,12 @@ public class Config {
      */
     public static boolean PROTECTION_BLOCK_ENABLED = true;
 
+    /**
+     * If enabled, prevents liquids from breaking things like redstone,
+     * repeaters, comparators, redstone torches, etc.
+     */
+    public static boolean WATER_PROTECTED_REDSTONE = true;
+
     //
     // Optimizations
     //
