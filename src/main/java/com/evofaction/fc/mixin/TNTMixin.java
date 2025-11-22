@@ -67,7 +67,7 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
      * explosion is spawned as 1 tick of extra velocity applied ahead of the others. (They haven't run their .move yet)
      * <p>
      * So TNT with non-zero velocity exploding, even if all spawned in the same gametick, same velocity, same position, etc.
-     * will actually move each other around as they blow up. (Yes, really). (I think this is called swing??)
+     * will actually move each other around as they blow up. (Yes, really). This is called swing.
      * <p>
      * All that to say, we can't just call this.explode N times in the exact same spot for merged TNT. What this method
      * does is if it's time to explode, and we have more than one stacked TNT, we spawn a clone. The clone isn't actually
@@ -158,6 +158,19 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
         return dimensions.height / 2;
     }
 
+    // I HAVE seen a case where this fixes a TINY floating point difference (1E-14)
+    // The whole way position is set for entities in 1.8 was different, and I am afraid to change it here.
+    // This method may be used in case of sanity check when all else fails. So far I have
+    // not seen it cause any meaningful differences in even precise cannons w/ swing.
+    // But if it stays, it needs more work (investigating).
+//    @Override
+//    public void setPosition(double x, double y, double z) {
+//        super.setPosition(x, y, z);
+//
+//        var bb = this.getBoundingBox();
+//        this.setPos((bb.minX + bb.maxX) / 2.0D, bb.minY, (bb.minZ + bb.maxZ) / 2.0D);
+//    }
+
     /**
      * Optimization: TNT can never sneak. The name descending is misleading,
      * it only calls isSneaking. It only affects players.
@@ -193,3 +206,4 @@ public abstract class TNTMixin extends Entity implements TNTInterface {
         );
     }
 }
+

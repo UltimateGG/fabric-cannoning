@@ -47,6 +47,9 @@ public class ConfigCommand {
                     .then(CommandManager.literal("wpredstone").executes(ctx -> {
                         Config.WATER_PROTECTED_REDSTONE = !Config.WATER_PROTECTED_REDSTONE;
                         return sendToggleMsg(ctx, "Water protected redstone", Config.WATER_PROTECTED_REDSTONE, false);
+                    })) .then(CommandManager.literal("wip").executes(ctx -> {
+                        Config.WIP = !Config.WIP;
+                        return sendToggleMsg(ctx, "WIP", Config.WIP, false);
                     }))
             );
         });

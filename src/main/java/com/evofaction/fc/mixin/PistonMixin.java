@@ -1,6 +1,7 @@
 package com.evofaction.fc.mixin;
 
 import com.evofaction.fc.Config;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,15 +10,19 @@ import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.*;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
@@ -26,6 +31,8 @@ import java.util.List;
 
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonMixin extends BlockEntity {
+    @Shadow public abstract BlockState getPushedBlock();
+
     @Shadow
     private BlockState pushedBlock;
     @Shadow
@@ -118,12 +125,73 @@ public abstract class PistonMixin extends BlockEntity {
 
                     if (!(i <= 0.0)) {
                         i = Math.min(i, d) + 0.01;
+
+                        // --- BEGIN 1.8 COMPATIBILITY PATCH ---
+                        // Add the old extra push (2 pixels ≈ 0.125 blocks)
+//                        if (self.extending && !bl /* not slime block behavior */ && i > 0) {
+//                            i =(f/2)+0.125;
+//                        } else
+//                            i += 0.01;
+                        // --- END PATCH ---
+
+//                        if (i > 0)
                         moveEntity(direction, entity, i, direction);
                         if (!self.extending && self.source) {
                             push(pos, entity, direction, d);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Shadow
+    private float lastProgress;
+    @Shadow
+    private long savedWorldTime;
+    @Shadow
+    private int field_26705;
+
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public static void tick(World world, BlockPos pos, BlockState state, PistonBlockEntity blockEntity) {
+        PistonMixin self = (PistonMixin)(Object)blockEntity;
+
+        self.savedWorldTime = world.getTime();
+        self.lastProgress = self.progress;
+        if (self.lastProgress >= 1.0F) {
+            if (world.isClient && self.field_26705 < 5) {
+                self.field_26705++;
+            } else {
+                // NOTE: was 0.25
+                if (self.extending) pushEntities(world, pos, 0.25F, blockEntity);
+                world.removeBlockEntity(pos);
+                blockEntity.markRemoved();
+                if (world.getBlockState(pos).isOf(Blocks.MOVING_PISTON)) {
+                    BlockState blockState = Block.postProcessState(self.pushedBlock, world, pos);
+                    if (blockState.isAir()) {
+                        world.setBlockState(pos, self.pushedBlock, Block.FORCE_STATE | Block.MOVED | Block.NO_REDRAW);
+                        Block.replace(self.pushedBlock, blockState, world, pos, 3);
+                    } else {
+                        if (blockState.contains(Properties.WATERLOGGED) && (Boolean)blockState.get(Properties.WATERLOGGED)) {
+                            blockState = blockState.with(Properties.WATERLOGGED, false);
+                        }
+
+                        world.setBlockState(pos, blockState, Block.NOTIFY_ALL | Block.MOVED);
+                        world.updateNeighbor(pos, blockState.getBlock(), pos);
+                    }
+                }
+            }
+        } else {
+            float f = self.progress + 0.5F;
+            pushEntities(world, pos, f, blockEntity);
+            moveEntitiesInHoneyBlock(world, pos, f, blockEntity);
+            self.progress = f;
+            if (self.progress >= 1.0F) {
+                self.progress = 1.0F;
             }
         }
     }
@@ -140,14 +208,13 @@ public abstract class PistonMixin extends BlockEntity {
 
     /**
      * @author UltimateGamer079
-     * @reason 1.8 pistons pushed farther than one block which would align TNT.
+     * @reason 1.8 pistons pushed farther than one block which would align TNT and
+     *         cause a certain number of pushes to push sand out of a cobweb.
      *         This is not the exact same but will be enough to be non-symmetrical.
      */
     @Overwrite
     private static void moveEntity(Direction direction, Entity entity, double distance, Direction movementDirection) {
-        if (entity instanceof TntEntity || entity instanceof FallingBlockEntity)
-            distance += 0.05D;
-
+        distance = distance == -0.74 ? 0.25 : 0.5625;
         entityMovementDirection.set(direction);
         entity.move(
             MovementType.PISTON,
@@ -161,23 +228,26 @@ public abstract class PistonMixin extends BlockEntity {
     }
     @Shadow
     private static void push(BlockPos pos, Entity entity, Direction direction, double amount) {}
+
+    @Shadow
+    private static void moveEntitiesInHoneyBlock(World world, BlockPos pos, float f, PistonBlockEntity blockEntity) {}
 }
-//
-//@Mixin(Entity.class)
-//class PistonMovementMixin {
-//    @ModifyConstant(
-//        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
-//        constant = @Constant(doubleValue = 0.51)
-//    )
-//    private double modifyClamp(double original) {
-//        return 1;
-//    }
-//
-//    @ModifyConstant(
-//        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
-//        constant = @Constant(doubleValue = -0.51)
-//    )
-//    private double modifyClamp2(double original) {
-//        return -1;
-//    }
-//}
+
+@Mixin(Entity.class)
+class TmpPistonMovementMixin {
+    @ModifyConstant(
+        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
+        constant = @Constant(doubleValue = 0.51)
+    )
+    private double modifyClamp(double original) {
+        return 1;
+    }
+
+    @ModifyConstant(
+        method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
+        constant = @Constant(doubleValue = -0.51)
+    )
+    private double modifyClamp2(double original) {
+        return -1;
+    }
+}

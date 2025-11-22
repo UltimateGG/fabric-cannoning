@@ -73,4 +73,7 @@ public class Config {
      * This is the equivalent of paper spigot's old optimize-explosions flag.
      */
     public static boolean CACHE_EXPLOSION_EXPOSURE = true;
+
+    // Flag for random/testing things for hot reloading mixins
+    public static boolean WIP = true;
 }

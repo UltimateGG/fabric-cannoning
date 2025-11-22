@@ -30,6 +30,8 @@ public abstract class Block36ExposureMixin extends World {
      * In 1.8 BlockPistonMoving override collisionRayTrace with always null.
      * Later, Mojang made it instead get the piston tile entity, and return the pushed block's collision box.
      * This option overrides that.
+     * This is done here and not by overriding PistonExtensionBlock's getCollisionShape because that would affect
+     * entity collisions, not just exposure.
      */
     @Override
     public BlockHitResult raycastBlock(Vec3d start, Vec3d end, BlockPos pos, VoxelShape shape, BlockState state) {

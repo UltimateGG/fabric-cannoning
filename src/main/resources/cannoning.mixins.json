@@ -11,6 +11,8 @@
     "LithiumExplosionMixin",
     "OnePushWebsMixin",
     "PistonMixin",
+    "PreciseMovementMixin",
+    "TmpPistonMovementMixin",
     "TNTMixin",
     "WaterProtectedRedstoneMixin"
   ],
