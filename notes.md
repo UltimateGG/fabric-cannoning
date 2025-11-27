@@ -19,6 +19,16 @@ For example in 1.8, sand would fall through a slab comp and stay on the ladder a
 Ladders are still needed under carpet to keep it from popping off. Ladders are also still needed under fence gates since they have no collision,
 so the sand would fall through in that case.
 
+### Pistons
+Pistons have essentially been redone since 1.8 and operate in a much better way. A large change is
+that the collision box of the block they are pushing is actually taken into account when pushing entities.
+So now, for example, if you push an entity with a fence gate it will be pushed against the gate. In 1.8 it was a
+very cheap method that did not do this. Pistons also would push farther than 1 block, so if you pushed
+TNT with a solid block, it actually moved 1 block and 2 pixels. This was implicitly used in a ton of cannons
+that aligned TNT, so a compatibility patch has been added. It preserves new behavior of aligning entities to the
+collision box, but pushes them extra. So if you use a solid block or the piston head, it will push the same as it
+did in 1.8.
+
 ### Redstone Update Order
 Redstone update order has never been consistent between servers due to various optimizations.
 It is different in 1.20, so some very complex cannons that implicitly rely on the old order may
