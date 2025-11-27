@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 // Client and server entry
 public class FabricCannoning implements ModInitializer {
-    public static final String MOD_ID = "fabric-cannoning";
+    public static final String MOD_ID = "cannoning";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override

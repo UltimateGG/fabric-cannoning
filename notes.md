@@ -18,3 +18,15 @@ In 1.20, the sand stays perfectly where it was dropped **(TODO: recheck after ou
 For example in 1.8, sand would fall through a slab comp and stay on the ladder at .0, but in 1.20 it will stay ontop of the slab, at 0.5.
 Ladders are still needed under carpet to keep it from popping off. Ladders are also still needed under fence gates since they have no collision,
 so the sand would fall through in that case.
+
+### Redstone Update Order
+Redstone update order has never been consistent between servers due to various optimizations.
+It is different in 1.20, so some very complex cannons that implicitly rely on the old order may
+behave differently. For most cannons, it should not matter.
+
+#### Triggered Dispensers Bug 
+The biggest thing this affects  is dispensers. It was and still is very buggy behavior for (mainly bud powered) dispensers. They get
+stuck in a "triggered" state and won't dispense TNT after the first shot. This happens in both versions, but
+the location and number of the dispensers that get bugged may be different from 1.8. Even in the old
+game this behavior was inconsistent and buggy, and any cannon relying on it would have been glitchy as
+well, therefore the old order will not be supported.
