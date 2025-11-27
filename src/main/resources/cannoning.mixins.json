@@ -9,6 +9,7 @@
     "ExposureCacheMixin",
     "FallingBlockMixin",
     "LithiumExplosionMixin",
+    "OldPistonRetractionMixin",
     "OnePushWebsMixin",
     "PistonMixin",
     "PreciseMovementMixin",

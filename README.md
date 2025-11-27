@@ -15,7 +15,6 @@ just boot up a singleplayer world and have a cannoning server.
 ### TODO/WIP
 - Pistons used to push over 1 block (1 block + 2px)
 - RC sand comps broken (due to above)
-- Investigate broken double piston extenders that a ton of old cannons relied on
 
 ### Config
 See [Config.java](./src/main/java/com/evofaction/fc/Config.java) for docs and the latest config options.

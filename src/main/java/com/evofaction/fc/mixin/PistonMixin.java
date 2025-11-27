@@ -13,17 +13,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +26,6 @@ import java.util.List;
 
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonMixin extends BlockEntity {
-    @Shadow public abstract BlockState getPushedBlock();
-
     @Shadow
     private BlockState pushedBlock;
     @Shadow
@@ -60,6 +53,7 @@ public abstract class PistonMixin extends BlockEntity {
         PistonMixin self = (PistonMixin)(Object)blockEntity;
         Direction direction = blockEntity.getMovementDirection();
         double d = f - self.progress;
+
         VoxelShape voxelShape = self.getHeadBlockState().getCollisionShape(world, pos);
         if (!voxelShape.isEmpty()) {
             Box box = offsetHeadBox(pos, voxelShape.getBoundingBox(), blockEntity);
@@ -109,7 +103,8 @@ public abstract class PistonMixin extends BlockEntity {
                     for (Box collidingBlockPart : list2) {
                         Box stretchedPath = Boxes.stretch(offsetHeadBox(pos, collidingBlockPart, blockEntity), direction, d);
                         Box targetEntityBoundingBox = entity.getBoundingBox();
-                        if (Config.PISTON_PULLBACK_FIX && !self.extending) {
+                        // FabricCannoning - Piston entity pullback fix
+                        if (Config.PISTON_ENTITY_PULLBACK_FIX && !self.extending) {
                             var origPart = collidingBlockPart.offset(
                                 pos.getX() + self.facing.getOffsetX(), pos.getY() + self.facing.getOffsetY(), pos.getZ() + self.facing.getOffsetZ()
                             );
@@ -166,7 +161,6 @@ public abstract class PistonMixin extends BlockEntity {
             if (world.isClient && self.field_26705 < 5) {
                 self.field_26705++;
             } else {
-                // NOTE: was 0.25
                 if (self.extending) pushEntities(world, pos, 0.25F, blockEntity);
                 world.removeBlockEntity(pos);
                 blockEntity.markRemoved();
@@ -235,6 +229,19 @@ public abstract class PistonMixin extends BlockEntity {
 
 @Mixin(Entity.class)
 class TmpPistonMovementMixin {
+    // Disable whatever adjustment this was doing to our applied movement
+    // TODO: Need to investigate what it was doing.
+    @Redirect(
+        method = "move",
+        at = @At(
+            value="INVOKE",
+            target = "Lnet/minecraft/entity/Entity;adjustMovementForPiston(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;"
+        )
+    )
+    public Vec3d adjMovement(Entity instance, Vec3d movement) {
+        return movement;
+    }
+
     @ModifyConstant(
         method = "calculatePistonMovementFactor(Lnet/minecraft/util/math/Direction$Axis;D)D",
         constant = @Constant(doubleValue = 0.51)

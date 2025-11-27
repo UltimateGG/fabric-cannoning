@@ -16,38 +16,47 @@ public class ConfigCommand {
             dispatcher.register(
                 CommandManager.literal("cc")
                     .requires(source -> source.hasPermissionLevel(4))
-                    .then(CommandManager.literal("ew").executes(ctx -> {
-                        Config.EAST_WEST_CANNONING_FIX = !Config.EAST_WEST_CANNONING_FIX;
-                        return sendToggleMsg(ctx, "E/W Patch", Config.EAST_WEST_CANNONING_FIX, false);
+                    .then(CommandManager.literal("LIQUIDS_MOVE_TNT").executes(ctx -> {
+                        Config.LIQUIDS_MOVE_TNT = !Config.LIQUIDS_MOVE_TNT;
+                        return sendToggleMsg(ctx, "Liquids move TNT", Config.LIQUIDS_MOVE_TNT, false);
                     }))
-                    .then(CommandManager.literal("mergetnt").executes(ctx -> {
-                        Config.MERGE_TNT = !Config.MERGE_TNT;
-                        return sendToggleMsg(ctx, "Merge TNT", Config.MERGE_TNT, false);
+                    .then(CommandManager.literal("PISTON_ENTITY_PULLBACK_FIX").executes(ctx -> {
+                        Config.PISTON_ENTITY_PULLBACK_FIX = !Config.PISTON_ENTITY_PULLBACK_FIX;
+                        return sendToggleMsg(ctx, "Piston entity pullback fix", Config.PISTON_ENTITY_PULLBACK_FIX, false);
                     }))
-                    .then(CommandManager.literal("exposurecache").executes(ctx -> {
-                        Config.CACHE_EXPLOSION_EXPOSURE = !Config.CACHE_EXPLOSION_EXPOSURE;
-                        return sendToggleMsg(ctx, "Exposure cache", Config.CACHE_EXPLOSION_EXPOSURE, false);
+                    .then(CommandManager.literal("OLD_PISTON_RETRACTION").executes(ctx -> {
+                        Config.OLD_PISTON_RETRACTION = !Config.OLD_PISTON_RETRACTION;
+                        return sendToggleMsg(ctx, "Old piston retraction", Config.OLD_PISTON_RETRACTION, false);
                     }))
-                    .then(CommandManager.literal("pistonpullback").executes(ctx -> {
-                        Config.PISTON_PULLBACK_FIX = !Config.PISTON_PULLBACK_FIX;
-                        return sendToggleMsg(ctx, "Piston pullback fix", Config.PISTON_PULLBACK_FIX, false);
-                    }))
-                    .then(CommandManager.literal("block36fix").executes(ctx -> {
+                    .then(CommandManager.literal("BLOCK36_RESOLVES_COLLISION").executes(ctx -> {
                         Config.BLOCK36_RESOLVES_COLLISION = !Config.BLOCK36_RESOLVES_COLLISION;
                         return sendToggleMsg(ctx, "Block 36 exposure fix", !Config.BLOCK36_RESOLVES_COLLISION, false);
                     }))
-                    .then(CommandManager.literal("1pushwebs").executes(ctx -> {
+                    .then(CommandManager.literal("EAST_WEST_CANNONING_FIX").executes(ctx -> {
+                        Config.EAST_WEST_CANNONING_FIX = !Config.EAST_WEST_CANNONING_FIX;
+                        return sendToggleMsg(ctx, "E/W Patch", Config.EAST_WEST_CANNONING_FIX, false);
+                    }))
+                    .then(CommandManager.literal("ONE_PUSH_WEBS").executes(ctx -> {
                         Config.ONE_PUSH_WEBS = !Config.ONE_PUSH_WEBS;
                         return sendToggleMsg(ctx, "One push webs", Config.ONE_PUSH_WEBS, true);
                     }))
-                    .then(CommandManager.literal("protectionblocks").executes(ctx -> {
+                    .then(CommandManager.literal("PROTECTION_BLOCK_ENABLED").executes(ctx -> {
                         Config.PROTECTION_BLOCK_ENABLED = !Config.PROTECTION_BLOCK_ENABLED;
                         return sendToggleMsg(ctx, "Protection blocks", Config.PROTECTION_BLOCK_ENABLED, true);
                     }))
-                    .then(CommandManager.literal("wpredstone").executes(ctx -> {
+                    .then(CommandManager.literal("WATER_PROTECTED_REDSTONE").executes(ctx -> {
                         Config.WATER_PROTECTED_REDSTONE = !Config.WATER_PROTECTED_REDSTONE;
                         return sendToggleMsg(ctx, "Water protected redstone", Config.WATER_PROTECTED_REDSTONE, false);
-                    })) .then(CommandManager.literal("wip").executes(ctx -> {
+                    }))
+                    .then(CommandManager.literal("MERGE_TNT").executes(ctx -> {
+                        Config.MERGE_TNT = !Config.MERGE_TNT;
+                        return sendToggleMsg(ctx, "Merge TNT", Config.MERGE_TNT, false);
+                    }))
+                    .then(CommandManager.literal("CACHE_EXPLOSION_EXPOSURE").executes(ctx -> {
+                        Config.CACHE_EXPLOSION_EXPOSURE = !Config.CACHE_EXPLOSION_EXPOSURE;
+                        return sendToggleMsg(ctx, "Exposure cache", Config.CACHE_EXPLOSION_EXPOSURE, false);
+                    }))
+                    .then(CommandManager.literal("WIP").executes(ctx -> {
                         Config.WIP = !Config.WIP;
                         return sendToggleMsg(ctx, "WIP", Config.WIP, false);
                     }))

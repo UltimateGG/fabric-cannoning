@@ -20,7 +20,13 @@ public class Config {
      * <p>
      * It only affects things already glitched inside of the block being pulled back.
      */
-    public static boolean PISTON_PULLBACK_FIX = true;
+    public static boolean PISTON_ENTITY_PULLBACK_FIX = true;
+
+    /**
+     * Allows two extended pistons retracting in the same tick to be pulled back. (Cheap double piston extenders)
+     * This setting enables the 1.8 behavior, fixing old sand comps.
+     */
+    public static boolean OLD_PISTON_RETRACTION = true;
 
     /**
      * When false, makes moving piston blocks (Block 36) not block ray traces for collision.
