@@ -29,12 +29,21 @@ public class Config {
     public static boolean OLD_PISTON_RETRACTION = true;
 
     /**
-     * When false, makes moving piston blocks (Block 36) not block ray traces for collision.
+     * When true, makes moving piston blocks (Block 36) not block ray traces for collision.
      * This fixes carpet comps. Fence gate comps still work on default 1.20 since
      * they already have no collision (when open). This does not affect player/entity
      * movement collision.
      */
-    public static boolean BLOCK36_RESOLVES_COLLISION = false;
+    public static boolean OLD_BLOCK36_EXPOSURE = true;
+
+    /**
+     * Ladders hitbox was widened from 2px to 3px to make climbing a ladder with a trapdoor
+     * at the top more seamless. This made ladders slightly less efficient for exposure, blocking
+     * some rays, and causing precise-ish cannons to behave differently.
+     * When true, makes the raycast shape for ladders the same as in 1.8.
+     * This does not affect player/entity movement collision, or visual size.
+     */
+    public static boolean OLD_LADDER_EXPOSURE = true;
 
     //
     // General/Optional Cannon Settings

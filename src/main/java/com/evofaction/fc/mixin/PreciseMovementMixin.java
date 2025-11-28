@@ -1,6 +1,5 @@
 package com.evofaction.fc.mixin;
 
-import com.evofaction.fc.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.TntEntity;
@@ -25,8 +24,6 @@ public class PreciseMovementMixin {
         )
     )
     public double morePreciseMovement(double original) {
-        if (!Config.WIP) return original;
-
         Entity self = (Entity) (Object) this;
         if (self instanceof TntEntity || self instanceof FallingBlockEntity)
             return 0.0D;

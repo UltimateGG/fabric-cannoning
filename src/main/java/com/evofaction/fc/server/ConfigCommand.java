@@ -28,9 +28,13 @@ public class ConfigCommand {
                         Config.OLD_PISTON_RETRACTION = !Config.OLD_PISTON_RETRACTION;
                         return sendToggleMsg(ctx, "Old piston retraction", Config.OLD_PISTON_RETRACTION, false);
                     }))
-                    .then(CommandManager.literal("BLOCK36_RESOLVES_COLLISION").executes(ctx -> {
-                        Config.BLOCK36_RESOLVES_COLLISION = !Config.BLOCK36_RESOLVES_COLLISION;
-                        return sendToggleMsg(ctx, "Block 36 exposure fix", !Config.BLOCK36_RESOLVES_COLLISION, false);
+                    .then(CommandManager.literal("OLD_BLOCK36_EXPOSURE").executes(ctx -> {
+                        Config.OLD_BLOCK36_EXPOSURE = !Config.OLD_BLOCK36_EXPOSURE;
+                        return sendToggleMsg(ctx, "Old block 36 exposure", Config.OLD_BLOCK36_EXPOSURE, false);
+                    }))
+                    .then(CommandManager.literal("OLD_LADDER_EXPOSURE").executes(ctx -> {
+                        Config.OLD_LADDER_EXPOSURE = !Config.OLD_LADDER_EXPOSURE;
+                        return sendToggleMsg(ctx, "Old ladder exposure", Config.OLD_LADDER_EXPOSURE, false);
                     }))
                     .then(CommandManager.literal("EAST_WEST_CANNONING_FIX").executes(ctx -> {
                         Config.EAST_WEST_CANNONING_FIX = !Config.EAST_WEST_CANNONING_FIX;

@@ -3,10 +3,11 @@
   "package": "com.evofaction.fc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "Block36ExposureMixin",
     "EastWestCannoningMixin",
     "ExplosionMixin",
     "ExposureCacheMixin",
+    "ExposureOverrides_LadderMixin",
+    "ExposureOverridesMixin",
     "FallingBlockMixin",
     "LithiumExplosionMixin",
     "OldPistonRetraction_HeadMixin",

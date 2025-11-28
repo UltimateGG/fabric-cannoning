@@ -32,7 +32,9 @@ Not every single patch is configurable. See list below for what this mod changes
 take the exact same path, down to the millionth
 - Fixes the default triangles order to always be YXZ (Plus toggleable e/w patch)
 - Fixes carpet comps by making Block36 not block exposure
-- Piston pullback fix - In 1.8 pistons only pushed, they did not *pull* entities. In 1.20, they do (Imagine making a hook shape with slime
+- Overrides exposure for ladders to use old shape
+- Fixes old double piston extenders (e.g. used in sand comps). Allows two extended pistons retracting in the same tick to be pulled back
+- Piston entity pullback fix - In 1.8 pistons only pushed, they did not *pull* entities. In 1.20, they do (Imagine making a hook shape with slime
 blocks). This behavior is preserved but entities glitched in the moving block or piston head will not be pulled backwards. This
 fixes things like sand comps so that it does not push and pull sand back and forth in the piston head.
 
