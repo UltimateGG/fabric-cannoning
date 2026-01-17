@@ -80,4 +80,9 @@ abstract class ExposureOverrides_LadderMixin extends Block {
             default -> OLD_NORTH_SHAPE; // and North
         };
     }
+
+    @Override
+    public boolean hasDynamicBounds() {
+        return true;
+    }
 }
