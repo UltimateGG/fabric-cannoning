@@ -89,6 +89,11 @@ public class Config {
      */
     public static boolean CACHE_EXPLOSION_EXPOSURE = true;
 
+    /**
+     * Client only: True if explosion particles are shown
+     */
+    public static boolean EXPLOSION_PARTICLES_ENABLED = false;
+
     // Flag for random/testing things for hot reloading mixins
     public static boolean WIP = true;
 }

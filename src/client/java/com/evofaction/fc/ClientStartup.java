@@ -30,6 +30,13 @@ public class ClientStartup implements ClientModInitializer {
     private void registerCommand() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(
+                ClientCommandManager.literal("toggleboom").executes(ctx -> {
+                    Config.EXPLOSION_PARTICLES_ENABLED = !Config.EXPLOSION_PARTICLES_ENABLED;
+                    ctx.getSource().sendFeedback(Text.literal("Toggled explosion particles, now: " + Config.EXPLOSION_PARTICLES_ENABLED));
+                    return 1;
+                })
+            );
+            dispatcher.register(
                 ClientCommandManager.literal("dab")
                     .then(ClientCommandManager.literal("clear").executes(ctx -> {
                         box = null;

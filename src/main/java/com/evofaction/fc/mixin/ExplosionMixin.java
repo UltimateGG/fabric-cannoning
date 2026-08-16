@@ -1,9 +1,11 @@
 package com.evofaction.fc.mixin;
 
+import com.evofaction.fc.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 
@@ -35,5 +37,16 @@ public class ExplosionMixin {
     )
     private double fixEyeHeight(Entity instance) {
         return instance.getEyeY();
+    }
+
+    @ModifyVariable(
+        method = "affectWorld",
+        at = @At("HEAD"),
+        argsOnly = true
+    )
+    private boolean disableExplosionParticles(boolean particles) {
+        if (!Config.EXPLOSION_PARTICLES_ENABLED) return false;
+
+        return particles;
     }
 }
